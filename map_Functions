@@ -2,7 +2,7 @@ import time
 import random
 
 def rotate_Right(x_Rotation):
-    #Rotates the direction right for the map
+    #Rotates the direction right (numericly) for the map
     if x_Rotation == 4:
         return 1
         
@@ -12,7 +12,7 @@ def rotate_Right(x_Rotation):
 
 
 def rotate_Left(x_Rotation):
-    #Rotates the direction left for the map
+    #Rotates the direction left (numericly) for the map
     if x_Rotation == 1:
         return 4
     else:
@@ -20,6 +20,7 @@ def rotate_Left(x_Rotation):
         return x_Rotation
 
 def get_New_Position(x, y ,z):
+    #Uses the direction and time (which has a set speed in the main function) to move the robot
     #x = time_Elapsed, y = x_Rotation, z = robo_x_y
     if y == 1:
         z[1] -= x
@@ -35,6 +36,7 @@ def get_New_Position(x, y ,z):
         return z
 
 def create_Wall(y, z):
+    #Takes the direction of the robot and the new position to add a space where it hit
     #y = x_Rotation, z = robo_x_y
     new_List = [z[0], z[1]]
     if y == 1:
@@ -86,7 +88,10 @@ def draw_Map(robo_New_Position, wall):
                 ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"]]
                 
     
+    #Updates the map with the new position of the robot
     map_List[robo_New_Position[1]][robo_New_Position[0]] = "○"
+    
+    #Updates the map with all the points that have walls detected
     for i in wall:
         map_List[int(round(i[1]))][int(round(i[0]))] = "■"
     
@@ -107,22 +112,29 @@ def draw_Map(robo_New_Position, wall):
 
 def main():
 
+    #Robot starting vlaue
     robo_x_y = [11,11]
+    #Robot starting direction
     x_Rotation = 1
+    #Array that will contain wall points
     wall = []
-    robo_Save = []
+    # distance_Num = (□ or ■)/2
     distance_Num = 6.223
 
     while True:
         #Use time.time() if needing method for counting time between lines
         time_Elapsed = int(input("How much time elapsed? : "))
         
+        #Return new position of the robot and pass it into robo_x_y
         robo_x_y = get_New_Position(time_Elapsed, x_Rotation, robo_x_y)
     
+        #Uses the new position of the robot and direction to identify wall points and pass all of them into an array
         wall.append(create_Wall(x_Rotation, robo_x_y))
         
+        #Passes the position of the robot and the wall points into the draw_Map function
         draw_Map(robo_x_y, wall)
         
+        #Random value to choose between left and right
         rand_Int = random.randint(0, 1)
         
         if rand_Int == 0:
