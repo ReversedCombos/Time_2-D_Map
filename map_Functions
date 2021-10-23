@@ -1,0 +1,148 @@
+import time
+import random
+
+def rotate_Right(x_Rotation):
+    #Rotates the direction right for the map
+    if x_Rotation == 4:
+        return 1
+        
+    else:
+        x_Rotation += 1
+        return x_Rotation
+
+
+def rotate_Left(x_Rotation):
+    #Rotates the direction left for the map
+    if x_Rotation == 1:
+        return 4
+    else:
+        x_Rotation -= 1
+        return x_Rotation
+
+def get_New_Position(x, y ,z):
+    #x = time_Elapsed, y = x_Rotation, z = robo_x_y
+    if y == 1:
+        z[1] -= x
+        return z
+    elif y == 2:
+        z[0] += x
+        return z
+    elif y == 3:
+        z[1] += x
+        return z
+    else:
+        z[0] -= x
+        return z
+
+def create_Wall(y, z):
+    #y = x_Rotation, z = robo_x_y
+    new_List = [z[0], z[1]]
+    if y == 1:
+        new_List[1] -= 1
+        return new_List
+    elif y == 2:
+        new_List[0] += 1
+        return new_List
+    elif y == 3:
+        new_List[1] += 1
+        return new_List
+    else:
+        new_List[0] -= 1
+        return new_List
+
+def draw_Map(robo_New_Position, wall):
+    #Off character □
+    #On character ■
+    #Robot character ○
+    
+    i = -1
+    j = -1
+    
+    
+    string_List_Holder = []
+    string_List = ""
+    string_Map = ""
+    
+    map_List = [["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"],
+                ["□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□","□", "□"]]
+                
+    
+    map_List[robo_New_Position[1]][robo_New_Position[0]] = "○"
+    for i in wall:
+        map_List[int(round(i[1]))][int(round(i[0]))] = "■"
+    
+    #Takes map list and throws it into a for loop iterating on every nested list
+    for list_Line in map_List:
+        #Takes every iteration of the list and joins it into a string
+        #with a space in the middle
+        string_List = ' '.join(list_Line)
+        #Throws that new string into a list
+        string_List_Holder.append(string_List)
+        
+    #Takes that list and joins it together on a new line every time
+    string_Map = '\n'.join(string_List_Holder)
+    
+    print(string_Map)
+
+
+
+def main():
+
+    robo_x_y = [11,11]
+    x_Rotation = 1
+    wall = []
+    robo_Save = []
+    distance_Num = 6.223
+
+    while True:
+        #Use time.time() if needing method for counting time between lines
+        time_Elapsed = int(input("How much time elapsed? : "))
+        
+        robo_x_y = get_New_Position(time_Elapsed, x_Rotation, robo_x_y)
+    
+        wall.append(create_Wall(x_Rotation, robo_x_y))
+        
+        draw_Map(robo_x_y, wall)
+        
+        rand_Int = random.randint(0, 1)
+        
+        if rand_Int == 0:
+            print("Right")
+            
+            #Gets the value of rotation and throws it into x_Rotation for use on the map
+            x_Rotation = rotate_Right(x_Rotation)
+            print(x_Rotation)
+            
+        else:
+            print("Left")
+            
+            #Gets the value of rotation and throws it into x_Rotation for use on the map
+            x_Rotation = rotate_Left(x_Rotation)
+            print(x_Rotation)
+            
+# If we are on the main thread, run the program
+if __name__ == "__main__":
+
+    try:
+        main()
+    except:
+        raise
